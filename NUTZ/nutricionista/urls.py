@@ -4,7 +4,7 @@ from nutricionista import views
 
 
 urlpatterns = [
-    url(r'^$', views.index, name='index-nutricionista'),
+    url(r'^$', views.index, name='nutricionista-index'),
     url(r'^dashboard/$', views.dashboard, name='nutricionista-dashboard'),
     url(r'^calculadora/$', views.calculadora, name='nutricionista-calculadora'),
 ]
