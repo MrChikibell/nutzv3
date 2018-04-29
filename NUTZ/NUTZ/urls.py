@@ -22,6 +22,6 @@ from calculadora import views as views_calculadora
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', views_calculadora.home , name='home'),
-    url(r'^calculadora/$', include('calculadora.urls'))
+    url(r'^nutricionista/', include('nutricionista.urls'))
 
 ]
