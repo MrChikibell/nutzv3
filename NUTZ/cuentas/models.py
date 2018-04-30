@@ -8,49 +8,63 @@ from django.contrib.auth.models import (
 )
 # Create your models here.
 
-
+#LOS SIGUIENTES METODOS ESTAN ESCRITOS EN INGLES PORQUE SOBREESCRIBEN FUNCIONALIDAD DE LA CLASE QUEHEREDAN
 class UsuarioManager(BaseUserManager):
-    def crear_usuario(self, email, password=None):
+    
+    def create_user(self, email, password=None):
         """
-        Crea y guarda el usuario con email y contraseña
+        Crea y guarda un usuario segun su email y contraseña
         """
         if not email:
-            raise ValueError('Los usuarios deben tener su email y contraseña')
+            raise ValueError('Debes ingresar un email correcto.')
 
-        usuario = self.model(
+        user = self.model(
             email=self.normalize_email(email),
         )
 
-        usuario.set_password(password)
-        usuario.save(using=self._db)
-        return usuario
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
-    def crear_usuario_nutri(self, email, password):
+    def create_staffuser(self, email, password):
         """
-        Crea y guarda un usuario nutricionista con email y contraseña, utiliza la funcion de arriba
+        Crea y guarda un usuario staff con email, contraseña.
         """
-        usuario = self.crear_usuario(
+        user = self.create_user(
             email,
             password=password,
         )
-        usuario.nutri = True
-        usuario.save(using=self._db)
-        return usuario
+        user.staff = True
+        user.save(using=self._db)
+        return user
 
-    def crear_usuario_admin(self, email, password):
+    def create_superuser(self, email, password):
         """
-        Crea y guarda un super usuario dado email y contraseña
+        Crea y guarda un superusuario con email y contraseña
         """
-        usuario = self.create_user(
+        user = self.create_user(
             email,
             password=password,
         )
-        usuario.nutri = True
-        usuario.admin = True
-        usuario.save(using=self._db)
-        return usuario
+        user.staff = True
+        user.admin = True
+        user.save(using=self._db)
+        return user
 
-class Usuario(AbstractBaseUser):
+    def create_nutricionista(self, email, password):
+        """
+        Crea un usuario nutricionista
+        """
+        user = self.create_user(
+            email,
+            password=password
+        )
+        user.staff = True
+        user.nutri = True
+        user.save(using=self._db)
+        return user
+
+class User(AbstractBaseUser):
     #Información personal - obligatiorios
     rut = models.CharField(max_length=12)
     nombres = models.CharField(max_length=255)
@@ -62,21 +76,6 @@ class Usuario(AbstractBaseUser):
     nacionalidad = models.CharField(max_length=100)
     observacion = models.TextField(max_length=5000)
     ultima_atencion = models.DateTimeField()
-
-    # EDAD = calcular_edad(nacimiento)
-    # GRUPO_ETARIO = calcular_etario(EDAD)
-
-    # def calcular_edad(fecha_nacimiento):
-    #     """
-    #     Devuelve la edad en entero del usuario segun su fecha de nacimiento
-    #     """
-    #     pass
-    # def calcular_etario(fecha_nacimiento):
-    #     """
-    #     Devuelve el grupo etario basado en la cantidad de dias hasta la fecha 
-    #     """
-    #     pass
-
 
     M = 'M'
     F = 'F'
@@ -99,25 +98,56 @@ class Usuario(AbstractBaseUser):
     glicemia_mgdl = models.FloatField()
 
     #Permisos y accesos
-    activo = models.BooleanField(default=True)
-    admin = models.BooleanField(default=True)
-    nutri = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)
+    admin = models.BooleanField(default=False)
+    staff = models.BooleanField(default=False)
+    nutri = models.BooleanField(default=False)
+
+    def is_staff(self):
+        "¿Es el usuario staff?"
+        return self.staff
 
     @property
-    def esta_activo(self):
-        return self.activo
+    def is_admin(self):
+        "¿Es el usuario administrador?"
+        return self.admin
+
+    @property
+    def is_active(self):
+        "Esta el usuario activo?"
+        return self.active
 
     @property
     def es_nutri(self):
+        "¿Es el usuario nutricionista?"
         return self.nutri
-    
-    @property
-    def es_admin(self):
-        return self.admin
+    # #CACHAÑA
 
+    # def calcular_edad(fecha_nacimiento):
+    #     """
+    #     Devuelve la edad en entero del usuario segun su fecha de nacimiento
+    #     """
+    #     GRUPO_ETARIO = "Lactante"
+    #     return ((0,1,15),GRUPO_ETARIO)
+
+    # @property
+    # def edad(self):
+    #     GRUPO_ETARIOS = ("Lactante")
+    #     return ((0,1,15),GRUPO_ETARIO)
+
+    # EDAD = calcular_edad(nacimiento)
+    # GRUPO_ETARIO = calcular_etario(EDAD)
+
+ 
+    # def calcular_etario(fecha_nacimiento):
+    #     """
+    #     Devuelve el grupo etario basado en la cantidad de dias hasta la fecha 
+    #     """
+    #     pass
+   
     
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['rut','nombres','apellidos']
+    REQUIRED_FIELDS = ['rut','nombres','apellidos','nacimiento']
 
     #Funciones de utilidad
     
