@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'calculadora',
     'nutricionista',
     'paciente',
-    
+    'cuentas'
+
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+
+#MODELO DE USUARIO COSTUMIZADO
+AUTH_USER_MODEL = 'cuentas.User'

@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 from django.db import models
@@ -9,7 +10,7 @@ from django.contrib.auth.models import (
 # Create your models here.
 
 #LOS SIGUIENTES METODOS ESTAN ESCRITOS EN INGLES PORQUE SOBREESCRIBEN FUNCIONALIDAD DE LA CLASE QUEHEREDAN
-class UsuarioManager(BaseUserManager):
+class UserManager(BaseUserManager):
     
     def create_user(self, email, password=None):
         """
@@ -68,14 +69,9 @@ class User(AbstractBaseUser):
     #Información personal - obligatiorios
     rut = models.CharField(max_length=12)
     nombres = models.CharField(max_length=255)
-    apellidos = models.CharField(max_length=2)
-    nacimiento = models.DateField()
-
-    #Información personal - a llenar despues
-    ocupacion = models.CharField(max_length=255)
-    nacionalidad = models.CharField(max_length=100)
-    observacion = models.TextField(max_length=5000)
-    ultima_atencion = models.DateTimeField()
+    apellidos = models.CharField(max_length=255)
+    date = models.DateField(null=True, blank=True)
+    nacimiento = models.DateField(null=True, blank=True)
 
     M = 'M'
     F = 'F'
@@ -91,18 +87,16 @@ class User(AbstractBaseUser):
         unique=True
     )
 
-    #informacion nutricional
-    peso = models.IntegerField(default=0)
-
-    #información bioquímica
-    glicemia_mgdl = models.FloatField()
-
     #Permisos y accesos
     active = models.BooleanField(default=True)
     admin = models.BooleanField(default=False)
     staff = models.BooleanField(default=False)
     nutri = models.BooleanField(default=False)
-
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = [] #'rut','nombres','apellidos','nacimiento'
+    objects = UserManager()
+    #PROPIEDADES
+    @property
     def is_staff(self):
         "¿Es el usuario staff?"
         return self.staff
@@ -121,43 +115,37 @@ class User(AbstractBaseUser):
     def es_nutri(self):
         "¿Es el usuario nutricionista?"
         return self.nutri
-    # #CACHAÑA
-
-    # def calcular_edad(fecha_nacimiento):
-    #     """
-    #     Devuelve la edad en entero del usuario segun su fecha de nacimiento
-    #     """
-    #     GRUPO_ETARIO = "Lactante"
-    #     return ((0,1,15),GRUPO_ETARIO)
-
-    # @property
-    # def edad(self):
-    #     GRUPO_ETARIOS = ("Lactante")
-    #     return ((0,1,15),GRUPO_ETARIO)
-
-    # EDAD = calcular_edad(nacimiento)
-    # GRUPO_ETARIO = calcular_etario(EDAD)
-
- 
-    # def calcular_etario(fecha_nacimiento):
-    #     """
-    #     Devuelve el grupo etario basado en la cantidad de dias hasta la fecha 
-    #     """
-    #     pass
-   
     
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['rut','nombres','apellidos','nacimiento']
+    def has_perm(self, perm, obj=None):
+        """
+        Tiene permisos ?
+        """
+        return True
 
-    #Funciones de utilidad
-    
+    def has_module_perms(self, app_label):
+        """
+        Aca vamos a restringir accesos a ciertos modulos
+        """
+       
+        return True
+
     def get_nombre(self):
+        """
+        Devuelve un string email
+        """
         return self.email
 
     def get_nombre_completo(self):
+        """
+        Devuelve nombre y apellidos
+        """
         return self.nombres + self.apellidos
-
-    def __str__(self):
-        return self.email
     
-    objects = UsuarioManager()
+    def __str__(self):
+        """
+        Al imprimir el objeto
+        """
+        string = "{} - {}".format(self.rut, self.email) 
+        return string
+    
+    
