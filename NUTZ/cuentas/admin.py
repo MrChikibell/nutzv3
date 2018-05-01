@@ -22,6 +22,7 @@ class UserAdmin(BaseUserAdmin):
         # ('Ficha Paciente', {'fields': ('observacion','ultima_atencion')}),
         # ('Información Nutricional', {'fields': ('peso',)}),
         # ('Información Bioquimica', {'fields': ('glicemia_mgdl',)}),
+        ('Paciente', {'fields': ('es_paciente',)}),
         ('Permisos', {'fields': ('admin','staff', 'nutri', 'active')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin

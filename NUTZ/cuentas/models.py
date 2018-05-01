@@ -1,6 +1,6 @@
 from django.db import models
 import datetime
-from paciente.models import Paciente
+
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import (
@@ -8,6 +8,7 @@ from django.contrib.auth.models import (
     BaseUserManager
 )
 # Create your models here.
+
 #LOS SIGUIENTES METODOS ESTAN ESCRITOS EN INGLES PORQUE SOBREESCRIBEN FUNCIONALIDAD DE LA CLASE QUEHEREDAN
 class UserManager(BaseUserManager):
     
@@ -38,7 +39,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(self, email, rut, password):
         """
         Crea y guarda un superusuario con email y contraseña
         """
@@ -47,7 +48,12 @@ class UserManager(BaseUserManager):
             password=password,
         )
         user.staff = True
+        # print("PACI FUE INGRESADO COMO RUT={}, PACI={}".format(rut,paci))
+        # if (paci == 'True'):
+        #     user.paci = True
         user.admin = True
+        user.rut = rut
+        # user.paci = paci
         user.save(using=self._db)
         return user
 
@@ -63,7 +69,6 @@ class UserManager(BaseUserManager):
         user.nutri = True
         user.save(using=self._db)
         return user
-    
 
 class User(AbstractBaseUser):
     #Información personal - obligatiorios
@@ -72,7 +77,7 @@ class User(AbstractBaseUser):
     apellidos = models.CharField(max_length=255)
     date = models.DateField(null=True, blank=True)
     nacimiento = models.DateField(null=True, blank=True)
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True)
+
     M = 'M'
     F = 'F'
     GENEROS = (
@@ -92,8 +97,10 @@ class User(AbstractBaseUser):
     admin = models.BooleanField(default=False)
     staff = models.BooleanField(default=False)
     nutri = models.BooleanField(default=False)
+    es_paciente = models.BooleanField(default=True)
+
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [] #'rut','nombres','apellidos','nacimiento'
+    REQUIRED_FIELDS = ['rut'] #'rut','nombres','apellidos','nacimiento'
     objects = UserManager()
     #PROPIEDADES
     @property
@@ -115,6 +122,11 @@ class User(AbstractBaseUser):
     def es_nutri(self):
         "¿Es el usuario nutricionista?"
         return self.nutri
+    
+    @property
+    def es_paci(self):
+        "¿Es el usuario paciente?"
+        return self.es_paciente
     
     def has_perm(self, perm, obj=None):
         """
