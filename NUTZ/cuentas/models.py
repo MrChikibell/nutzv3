@@ -1,6 +1,6 @@
 from django.db import models
 import datetime
-
+from paciente.models import Paciente
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import (
@@ -8,7 +8,6 @@ from django.contrib.auth.models import (
     BaseUserManager
 )
 # Create your models here.
-
 #LOS SIGUIENTES METODOS ESTAN ESCRITOS EN INGLES PORQUE SOBREESCRIBEN FUNCIONALIDAD DE LA CLASE QUEHEREDAN
 class UserManager(BaseUserManager):
     
@@ -64,6 +63,7 @@ class UserManager(BaseUserManager):
         user.nutri = True
         user.save(using=self._db)
         return user
+    
 
 class User(AbstractBaseUser):
     #Información personal - obligatiorios
@@ -72,7 +72,7 @@ class User(AbstractBaseUser):
     apellidos = models.CharField(max_length=255)
     date = models.DateField(null=True, blank=True)
     nacimiento = models.DateField(null=True, blank=True)
-
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True)
     M = 'M'
     F = 'F'
     GENEROS = (

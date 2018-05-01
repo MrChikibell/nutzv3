@@ -6,8 +6,9 @@ from django.dispatch import receiver
 # Create your models here.
 
 class Paciente(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='paciente')
+    #user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='paciente')
     #Información personal - a llenar despues
+    id_paciente = models.CharField(max_length=10)
     ocupacion = models.CharField(max_length=255)
     nacionalidad = models.CharField(max_length=100)
     observacion = models.TextField(max_length=5000)
@@ -20,7 +21,7 @@ class Paciente(models.Model):
     glicemia_mgdl = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return self.user.email
+        return self.id_paciente
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
