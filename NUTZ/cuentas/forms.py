@@ -8,10 +8,10 @@ class FormRegistar(forms.ModelForm):
     rut = forms.CharField(widget=forms.TextInput)
     password = forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirma la contraseña', widget=forms.PasswordInput)
-
+    es_paciente = forms.BooleanField()
     class Meta:
         model = User
-        fields = ('email','rut')
+        fields = ('email','rut', 'es_paciente', 'es_nutri')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -40,11 +40,12 @@ class UserAdminCrearForm(forms.ModelForm):
     
     """
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Password confirmacion', widget=forms.PasswordInput)
     rut = forms.CharField(label="RUT", widget=forms.TextInput)
+    #es_paciente = forms.BooleanField(label="Es paciente?", widget=forms.TextInput)
     class Meta:
         model = User
-        fields = ('email','rut')
+        fields = ('email','rut',)
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -71,7 +72,7 @@ class UserAdminActualizarForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'active', 'admin')
+        fields = ('email', 'password', 'es_paciente', 'es_nutri', 'admin')
 
     def clean_password(self):
         

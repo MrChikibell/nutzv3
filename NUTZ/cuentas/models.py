@@ -1,18 +1,19 @@
 from django.db import models
 import datetime
-
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager
 )
+
+
 # Create your models here.
 
 #LOS SIGUIENTES METODOS ESTAN ESCRITOS EN INGLES PORQUE SOBREESCRIBEN FUNCIONALIDAD DE LA CLASE QUEHEREDAN
 class UserManager(BaseUserManager):
     
-    def create_user(self, email, password=None):
+    def create_user(self, email, es_paciente, es_nutri, password=None):
         """
         Crea y guarda un usuario segun su email y contraseña
         """
@@ -21,7 +22,18 @@ class UserManager(BaseUserManager):
 
         user = self.model(
             email=self.normalize_email(email),
+            es_paciente = es_paciente,
+            es_nutri = es_nutri
         )
+
+        if user.es_paciente:
+            print ("EL USUARIO ES PACIENTE BUM")
+            
+        else: 
+            print("EL USUARIO NO ES PACIENTE")
+
+        if user.es_nutri:
+            print("El usuario es nutri")
 
         user.set_password(password)
         user.save(using=self._db)
@@ -34,18 +46,21 @@ class UserManager(BaseUserManager):
         user = self.create_user(
             email,
             password=password,
+
         )
         user.staff = True
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, rut, password):
+    def create_superuser(self, email, rut, es_paciente, es_nutri, password):
         """
         Crea y guarda un superusuario con email y contraseña
         """
         user = self.create_user(
             email,
             password=password,
+            es_paciente = es_paciente,
+            es_nutri = es_nutri
         )
         user.staff = True
         # print("PACI FUE INGRESADO COMO RUT={}, PACI={}".format(rut,paci))
@@ -57,22 +72,16 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_nutricionista(self, email, password):
-        """
-        Crea un usuario nutricionista
-        """
-        user = self.create_user(
-            email,
-            password=password
-        )
-        user.staff = True
-        user.nutri = True
-        user.save(using=self._db)
-        return user
+
 
 class User(AbstractBaseUser):
     #Información personal - obligatiorios
     rut = models.CharField(max_length=12)
+    email = models.EmailField(
+        verbose_name = 'correo electrónico',
+        max_length=100,
+        unique=True
+    )
     nombres = models.CharField(max_length=255)
     apellidos = models.CharField(max_length=255)
     date = models.DateField(null=True, blank=True)
@@ -86,21 +95,17 @@ class User(AbstractBaseUser):
     )
     genero = models.CharField(max_length=2, choices=GENEROS, default=F)
 
-    email = models.EmailField(
-        verbose_name = 'Correo electrónico',
-        max_length=100,
-        unique=True
-    )
+
 
     #Permisos y accesos
     active = models.BooleanField(default=True)
     admin = models.BooleanField(default=False)
     staff = models.BooleanField(default=False)
-    nutri = models.BooleanField(default=False)
-    es_paciente = models.BooleanField(default=True)
+    es_nutri = models.BooleanField(default=False)
+    es_paciente = models.BooleanField(default=False)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['rut'] #'rut','nombres','apellidos','nacimiento'
+    USERNAME_FIELD = ('email')
+    REQUIRED_FIELDS = ['rut','es_paciente','es_nutri'] #'rut','nombres','apellidos','nacimiento'
     objects = UserManager()
     #PROPIEDADES
     @property
@@ -119,12 +124,12 @@ class User(AbstractBaseUser):
         return self.active
 
     @property
-    def es_nutri(self):
+    def is_nutri(self):
         "¿Es el usuario nutricionista?"
-        return self.nutri
+        return self.es_nutri
     
     @property
-    def es_paci(self):
+    def is_paci(self):
         "¿Es el usuario paciente?"
         return self.es_paciente
     
@@ -151,7 +156,8 @@ class User(AbstractBaseUser):
         """
         Devuelve nombre y apellidos
         """
-        return self.nombres + self.apellidos
+
+        return self.nombres + self.apellidos if self.nombres + self.apellidos == "" else "SIN NOMBRE ESPECIFICADO"
     
     def __str__(self):
         """
@@ -159,5 +165,9 @@ class User(AbstractBaseUser):
         """
         string = "{} - {}".format(self.rut, self.email) 
         return string
+
+# @receiver(pre_save)
+# def my_callback(sender, instance, *args, **kwargs):
+#     instance.slug = slugify(instance.title)
     
     

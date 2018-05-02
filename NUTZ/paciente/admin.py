@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Paciente
-# from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 # from .forms import PacienteAdminActualizarForm, PacienteAdminCrearForm
 # class PacienteAdmin(BaseUserAdmin):
     

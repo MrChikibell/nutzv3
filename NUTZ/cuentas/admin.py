@@ -23,14 +23,15 @@ class UserAdmin(BaseUserAdmin):
         # ('Información Nutricional', {'fields': ('peso',)}),
         # ('Información Bioquimica', {'fields': ('glicemia_mgdl',)}),
         ('Paciente', {'fields': ('es_paciente',)}),
-        ('Permisos', {'fields': ('admin','staff', 'nutri', 'active')}),
+        ('Nutricionista', {'fields': ('es_nutri',)}),
+        ('Permisos', {'fields': ('admin','staff', 'active')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('rut','email', 'password1', 'password2')}
+            'fields': ('rut','email', 'password1', 'password2','es_paciente', 'es_nutri')}
         ),
     )
     search_fields = ('email', )
