@@ -63,12 +63,8 @@ class UserManager(BaseUserManager):
             es_nutri = es_nutri
         )
         user.staff = True
-        # print("PACI FUE INGRESADO COMO RUT={}, PACI={}".format(rut,paci))
-        # if (paci == 'True'):
-        #     user.paci = True
         user.admin = True
         user.rut = rut
-        # user.paci = paci
         user.save(using=self._db)
         return user
 
@@ -95,18 +91,15 @@ class User(AbstractBaseUser):
     )
     genero = models.CharField(max_length=2, choices=GENEROS, default=F)
 
-
-
     #Permisos y accesos
     active = models.BooleanField(default=True)
     admin = models.BooleanField(default=False)
     staff = models.BooleanField(default=False)
     es_nutri = models.BooleanField(default=False)
     es_paciente = models.BooleanField(default=False)
-
     USERNAME_FIELD = ('email')
     REQUIRED_FIELDS = ['rut','es_paciente','es_nutri'] #'rut','nombres','apellidos','nacimiento'
-    objects = UserManager()
+    
     #PROPIEDADES
     @property
     def is_staff(self):
@@ -165,9 +158,4 @@ class User(AbstractBaseUser):
         """
         string = "{} - {}".format(self.rut, self.email) 
         return string
-
-# @receiver(pre_save)
-# def my_callback(sender, instance, *args, **kwargs):
-#     instance.slug = slugify(instance.title)
-    
-    
+    objects = UserManager()
