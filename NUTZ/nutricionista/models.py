@@ -14,7 +14,7 @@ class Nutricionista(models.Model):
     def crear_paciente(self):
         # paciente.nutricionista = self
         Paciente = apps.get_model('paciente', 'Paciente')
-        paciente = Paciente.objects.create(nutricionista = self)
+        paciente = Paciente.objects.create(user=self.user, nutricionista = self)
         # paciente = paciente.save()
         print("Paciente Creado")
         return paciente
