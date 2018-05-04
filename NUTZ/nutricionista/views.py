@@ -26,7 +26,7 @@ def calculadora(request):
 
 def inicio_nutri(request):
 
-    if request.method = "POST":
+    if request.method == "POST":
         form_add_paciente = FormAddPaciente(request.POST)
         if form_add_paciente.is_valid():
             #Quien es el nutricionista?
@@ -42,4 +42,4 @@ def inicio_nutri(request):
     context = dict()
     context['form'] = form_add_paciente
 
-    return render(request,template_name='nutricionista/index.html', context)
+    return render(request,'nutricionista/index.html', context)

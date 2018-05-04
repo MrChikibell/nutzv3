@@ -1,11 +1,9 @@
 from django.db import models
+from django.apps import apps
 from cuentas.models import User
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from paciente.models import(
-    Paciente,
 
-)
 
 class Nutricionista(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='nutricionista')
@@ -14,8 +12,8 @@ class Nutricionista(models.Model):
         return self.user.rut + " - " +self.user.email
 
     def crear_paciente(self):
-        paciente = Paciente()
         # paciente.nutricionista = self
+        Paciente = apps.get_model('paciente', 'Paciente')
         paciente = Paciente.objects.create(nutricionista = self)
         # paciente = paciente.save()
         print("Paciente Creado")

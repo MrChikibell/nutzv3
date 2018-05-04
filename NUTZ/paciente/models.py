@@ -6,8 +6,8 @@ from django.dispatch import receiver
 
 
 class Paciente(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='paciente') #REF: user.paciente -> Llama al único paciente del usuario
-    nutricionista = models.ForeignKey(Nutricionista, on_delete=models.CASCADE, related_name='pacientes') #REF: user.pacientes -> Llama a todos los pacientes del nutricionista
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='paciente') #REF: user.paciente -> Llama al único paciente del usuario
+    nutricionista = models.ForeignKey(Nutricionista, on_delete=models.CASCADE, null=True, blank=True related_name='pacientes') #REF: user.pacientes -> Llama a todos los pacientes del nutricionista
     #Información personal - a llenar despues
     ocupacion = models.CharField(max_length=255)
     nacionalidad = models.CharField(max_length=100)

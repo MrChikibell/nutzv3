@@ -1,4 +1,8 @@
 from django import forms
-from .models import Nutricionista
+from paciente.models import Paciente
 
-from 
+class FormAddPaciente(forms.ModelForm):
+
+    class Meta:
+        model = Paciente
+        fields = '__all__'
