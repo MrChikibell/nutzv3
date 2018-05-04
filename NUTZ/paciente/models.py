@@ -1,11 +1,13 @@
 from django.db import models
 from cuentas.models import User
+from nutricionista.models import Nutricionista
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
 
 class Paciente(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True, related_name='paciente')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='paciente') #REF: user.paciente -> Llama al único paciente del usuario
+    nutricionista = models.ForeignKey(Nutricionista, on_delete=models.CASCADE, related_name='pacientes') #REF: user.pacientes -> Llama a todos los pacientes del nutricionista
     #Información personal - a llenar despues
     ocupacion = models.CharField(max_length=255)
     nacionalidad = models.CharField(max_length=100)
@@ -30,7 +32,7 @@ class Paciente(models.Model):
 
         
 @receiver(post_save, sender=User)
-def crear_paciente(sender, instance, created, **kwargs):
+def crear_usuario_paciente(sender, instance, created, **kwargs):
     if created:
         if instance.es_paciente:
             Paciente.objects.create(user=instance)
