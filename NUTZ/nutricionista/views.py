@@ -1,9 +1,8 @@
 from django.shortcuts import render
-from nutricionista.models import (
-    Nutricionista,
-)
-from paciente.models import (
-    Paciente,
+
+from django.apps import apps
+from .forms import (
+    FormAddPaciente,
 
 )
 from django.shortcuts import get_object_or_404

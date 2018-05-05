@@ -28,6 +28,8 @@ class Paciente(models.Model):
     glicemia_mgdl = models.FloatField(null=True, blank=True)
 
     def __str__(self):
+        # return "hah"
+        # return  "Nutri: " + str(self.nutricionista)
         return self.user.rut + " - " +self.user.email
 
         

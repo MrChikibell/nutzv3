@@ -5,6 +5,14 @@
   <div class="row">
     <div class="col s12 center-align">
       Bienvenida Constanza
+      <form action="" method="POST">
+        {% csrf_token %}
+        <table>
+          {{form.as_table}}
+          
+        </table>
+        <input type="submit" value="guardar" class="btn ">
+      </form>
     </div>
   </div>
 </div>
