@@ -13,14 +13,17 @@ from django.contrib.auth.models import (
 #LOS SIGUIENTES METODOS ESTAN ESCRITOS EN INGLES PORQUE SOBREESCRIBEN FUNCIONALIDAD DE LA CLASE QUEHEREDAN
 class UserManager(BaseUserManager):
     
-    def create_user(self, email, es_paciente, es_nutri, password=None):
+    def create_user(self, rut, email, es_paciente, es_nutri, password=None):
         """
         Crea y guarda un usuario segun su email y contraseña
         """
         if not email:
             raise ValueError('Debes ingresar un email correcto.')
+        if not rut:
+            raise ValueError('Debes ingresar un rut') 
 
         user = self.model(
+            rut=rut,
             email=self.normalize_email(email),
             es_paciente = es_paciente,
             es_nutri = es_nutri

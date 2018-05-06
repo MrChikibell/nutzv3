@@ -33,7 +33,7 @@ class Paciente(models.Model):
         return self.user.rut + " - " +self.user.email
 
         
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=User) #Instancia de usuario es creada, y tiene cheackeado 'es_paciente'
 def crear_usuario_paciente(sender, instance, created, **kwargs):
     if created:
         if instance.es_paciente:
