@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from nutricionista.models   import Nutricionista
 from django.apps import apps
 from .forms import (
     FormAddPaciente,
@@ -30,9 +30,11 @@ def inicio_nutri(request):
         if form_add_paciente.is_valid():
             #Quien es el nutricionista?
             #author = get_object_or_404(User, username=slug)
-            
+            #IF USER.is logged()
+            # user = get_auth_user()
+            # nutricionista = user.nutricionista 
             nutricionista = get_object_or_404(Nutricionista, pk=5)
-            paciente = nutricionista.crear_paciente()
+            paciente = nutricionista.crear_paciente() #rut, email, law e
             print("Paciente creado desde el form")
 
     else:
