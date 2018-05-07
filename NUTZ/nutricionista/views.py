@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from nutricionista.models   import Nutricionista
 from django.apps import apps
 from .forms import (
     FormAddPaciente,
