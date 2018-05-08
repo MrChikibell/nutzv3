@@ -22,8 +22,8 @@ from cuentas import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^$', views_calculadora.home , name='home'),
+    #url(r'^$', views_calculadora.home , name='home'),
     url(r'^nutricionista/', include('nutricionista.urls')),
-    url(r'^login/', views.login, name='login')
+    url(r'^$', views.login, name='login')
 
 ]
