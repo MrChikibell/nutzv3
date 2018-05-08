@@ -1,11 +1,14 @@
 from django.shortcuts import render
 from nutricionista.models import Nutricionista
+from django.views.generic.list import ListView
+from paciente.models import Paciente
 from django.apps import apps
 from .forms import (
     FormAddPaciente,
 
 )
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
 # Create your views here.
 
 
@@ -33,9 +36,12 @@ def inicio_nutri(request):
             #IF USER.is logged()
             # user = get_auth_user()
             # nutricionista = user.nutricionista 
+            email = form_add_paciente.cleaned_data['email']
+            rut = form_add_paciente.cleaned_data['rut']
             nutricionista = get_object_or_404(Nutricionista, pk=5)
-            paciente = nutricionista.crear_paciente() #rut, email, law e
+            paciente = nutricionista.crear_paciente(email=email,rut=rut, es_paciente=True, es_nutri=False, password='password123') #rut, email, law e
             print("Paciente creado desde el form")
+            messages.add_message(request, messages.INFO, 'Paciente creado correctamente!')
 
     else:
         form_add_paciente = FormAddPaciente()
@@ -44,3 +50,13 @@ def inicio_nutri(request):
     context['form'] = form_add_paciente
 
     return render(request,'nutricionista/index.html', context)
+
+class PacienteListView(ListView):
+    model = Paciente
+
+    template_name = 'nutricionista/dashboard.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        return context
+    

@@ -5,6 +5,9 @@
   <div class="row">
     <div class="col s12 center-align">
       Bienvenida Constanza
+      {% for message in messages  %}
+      <p class='green-text'>{{message}}</p>
+      {% endfor %}
       <form action="" method="POST">
         {% csrf_token %}
         <table>

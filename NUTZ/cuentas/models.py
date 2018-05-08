@@ -60,7 +60,8 @@ class UserManager(BaseUserManager):
         Crea y guarda un superusuario con email y contraseña
         """
         user = self.create_user(
-            email,
+            email = email,
+            rut = rut,
             password=password,
             es_paciente = es_paciente,
             es_nutri = es_nutri

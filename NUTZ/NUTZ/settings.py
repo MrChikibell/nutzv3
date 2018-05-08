@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'paciente',
     'cuentas',
     'faq',
+    'alimento'
 
 ]
 
