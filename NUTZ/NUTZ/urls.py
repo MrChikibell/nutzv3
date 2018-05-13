@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #url(r'^$', views_calculadora.home , name='home'),
     url(r'^nutricionista/', include('nutricionista.urls')),
-    path('', views.inicio, name='inicio' ),
+    url(r'^$', views.inicio, name='inicio' ),
     url(r'^login/$', views.login, name='login'),
     url(r'^registro$',views.registro, name='registro-usuario'),
     url(r'^registro$',views.iniciar_registro, name='registro-usuario')

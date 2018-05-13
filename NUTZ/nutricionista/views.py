@@ -9,6 +9,8 @@ from .forms import (
 )
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
+
+from alimento.models import TipoAlimento, Alimento
 # Create your views here.
 
 
@@ -60,3 +62,19 @@ class PacienteListView(ListView):
 
         return context
     
+
+class TipoAlimentoList(ListView):
+    model = TipoAlimento
+    template_name = 'nutricionista/alimentos.html'
+
+class AlimentoList(ListView):
+    model = Alimento
+    template_name = 'nutricionista/tipoalimento.html'
+
+class TipoAlimentoCreate(ListView):
+    model = TipoAlimento
+    template_name = 'nutricionista/crearalimento.html'
+
+class AlimentoCreate(ListView):
+    model = Alimento
+    template_name = 'nutricionista/creartipoalimento.html'
